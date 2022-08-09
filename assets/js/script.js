@@ -175,6 +175,70 @@ $("#remove-tasks").on("click", function() {
   saveTasks();
 });
 
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event, ui) {
+
+  },
+  deactivate: function(event, ui) {
+
+  },
+  over: function(event) {
+
+  },
+  out: function(event) {
+
+  },
+  update: function() {
+    // array to store the task data in
+    var tempArr = [];
+
+    // loop over current set of children in sortable list
+    $(this).children().each(function() {
+      tempArr.push({
+        text: $(this)
+          .find("p")
+          .text()
+          .trim(),
+        date: $(this)
+          .find("span")
+          .text()
+          .trim()
+      });
+    });
+    // trim down list's ID to match object property
+    var arrName = $(this)
+      .attr("id")
+      .replace("list-", "");
+
+    // update array on tasks object and save
+    tasks[arrName] = tempArr;
+    saveTasks();
+  },
+
+  stop: function(event) {
+    $(this).removeClass("dropover");
+  }
+});
+
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  drop: function(event, ui) {
+    ui.draggable.remove();
+    console.log ("drop");
+  },
+  over: function(event, ui) {
+    console.log("over");
+  },
+  out: function(event, ui) {
+    console.log("out");
+  }
+});
+
 // load tasks for the first time
 loadTasks();
 
